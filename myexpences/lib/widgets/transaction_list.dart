@@ -4,20 +4,21 @@ import '../textStyle.dart';
 import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
-
-  final List<Transaction>transactions ;
+  final List<Transaction> transactions;
   TransactionList(this.transactions);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children:transactions
-          .map((tx) => Card(
-          child: Row(
+    return Container(
+      height: 350,
+      child: ListView.builder(
+        itemBuilder: (ctx, index) {
+          return Card(
+              child: Row(
             children: [
               Container(
-                child: TextStyles("₹ ${tx.amount}"),
-                margin: EdgeInsets.symmetric(
-                    vertical: 10, horizontal: 15),
+                child: TextStyles("₹ ${transactions[index].amount}"),
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                 decoration: BoxDecoration(
                     border: Border.all(
                         color: Colors.blueAccent,
@@ -30,7 +31,7 @@ class TransactionList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tx.title.toUpperCase(),
+                    transactions[index].title.toUpperCase(),
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Montserrat',
@@ -39,7 +40,8 @@ class TransactionList extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    DateFormat('dd - MM - yyyy').format(tx.date),
+                    DateFormat('dd - MM - yyyy')
+                        .format(transactions[index].date),
                     style: TextStyle(
                       color: Colors.blueGrey,
                     ),
@@ -47,8 +49,10 @@ class TransactionList extends StatelessWidget {
                 ],
               )
             ],
-          )))
-          .toList(),
+          ));
+        },
+        itemCount: transactions.length,
+      ),
     );
   }
 }
