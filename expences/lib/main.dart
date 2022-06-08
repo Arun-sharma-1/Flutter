@@ -1,37 +1,94 @@
+import './widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
 import './widgets/user_input.dart';
-import './widgets/main_transaction.dart';
+import './models/Transaction.dart';
+import './widgets/char.dart';
 
 void main() {
   runApp(MyExpences());
 }
 
 class MyExpences extends StatefulWidget {
-
   @override
   State<MyExpences> createState() => _MyExpencesState();
 }
 
 class _MyExpencesState extends State<MyExpences> {
-  void startAddNewTransaction(BuildContext ctx)
-  {
-    showBottomSheet(context: ctx, builder: (_) {
-      return UserTransaction(addTx);
+  List<Transaction> usertransaction = [
+    Transaction(id: 't1', title: 'shoes', amount: 10000, date: DateTime.now()),
+    Transaction(id: 't2', title: 'shirt', amount: 500, date: DateTime.now()),
+    Transaction(id: 't3', title: 'jeans', amount: 1200, date: DateTime.now()),
+  ];
+
+  void addUserTransaction(String title, double amount) {
+    final newTx = Transaction(
+      id: DateTime.now().toString(),
+      title: title,
+      amount: amount,
+      date: DateTime.now(),
+    );
+
+    setState(() {
+      usertransaction.add(newTx);
     });
   }
 
+  void startAddUserTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return UserTransaction(addUserTransaction);
+      },
+    );
+  }
+
+  void deleteTransaction(String id) {
+    setState(() {
+      usertransaction.removeWhere((element) => element.id == id);
+    });
+  }
+
+  List<Transaction> get recentTransaction {
+    return usertransaction.where((element) {
+      return element.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Personal Expences',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        accentColor: Colors.lightBlue, //for floating action button
+      ),
       home: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
+        floatingActionButton: Builder(
+          builder: (context) => FloatingActionButton(
+            backgroundColor: Colors.lightBlueAccent,
+            child: Icon(Icons.add),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (_) {
+                  return UserTransaction(addUserTransaction);
+                },
+              );
+            },
+          ),
         ),
         appBar: AppBar(
           title: Text('My Expences'),
-          backgroundColor: Colors.green,
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add))],
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () => startAddUserTransaction(context),
+            )
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -43,7 +100,8 @@ class _MyExpencesState extends State<MyExpences> {
                 ),
 
                 //userTransaction = TransactionList + TextField
-                MainTransaction(),
+                MyChart(recentTransaction),
+                TransactionList(usertransaction, deleteTransaction),
               ],
             ),
           ),

@@ -1,80 +1,104 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
+Container roundedSquare({
+  double width = double.infinity,
+  double height = 70,
+  required Color bgColor,
+  required Color textColor,
+  required String text1,
+  required String text2,
+  required String text3,
+  required double border_width,
+  required Color border_Color,
+}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+    width: double.infinity,
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(text1),
+            Text(" "),
+            Text(text2),
+          ],
+        ),
+        Column(
+
+          children: [
+            Text(text3),
+
+          ],
+        ),
+      ],
+    ),
+    margin: EdgeInsets.symmetric(horizontal: 10.0),
+    decoration: BoxDecoration(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(border_width),
+      border: Border.all(color: border_Color),
+    ),
+  );
+}
+
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  runApp(
+    MaterialApp(
       home: Scaffold(
-        body: Container(
-          margin: EdgeInsets.only(top: 150),
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Row(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
+        body: SafeArea(
+          child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                children: [
-                  Container(
-                    color: Colors.green,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Sarita Blood Bank',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          child: CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.green,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+              Container(width: double.infinity),
+              SizedBox(
+                height: 20,
               ),
-              Container(
-                width: 150,
-                // height: 100,
-                color: Colors.blueAccent,
-                child: Column(
-                  children: [
-                    Text(
-                      'Blood Group',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text('B +ve'),
-                    Text('Add unit'),
-                  ],
-                ),
-              )
+              roundedSquare(
+                textColor: Colors.black,
+                bgColor: Colors.teal,
+                text1: ("23/05/22"),
+                text2: ("Fetch milk from the market"),
+                text3: ("Monday"),
+                border_width: 30.0,
+                border_Color: Colors.yellow,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              roundedSquare(
+                text1: ("24/05/22"),
+                text2: ("Pay electricity bills"),
+                text3: ("Tuesday"),
+                bgColor: Colors.teal,
+                textColor: Colors.black,
+                border_width: 30.0,
+                border_Color: Colors.yellow,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              roundedSquare(
+                bgColor: Colors.teal,
+                textColor: Colors.black,
+                text1: ("24/05/22"),
+                text2: ("Complete flutter assignment"),
+                text3: ("Tuesday"),
+                border_width: 30.0,
+                border_Color: Colors.yellow,
+              ),
+              SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

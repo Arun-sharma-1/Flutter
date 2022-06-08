@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "993763494695",
+    "project_id": "mychat-8a8dd",
+    "storage_bucket": "mychat-8a8dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993763494695:android:c930ba982c8523b4c57702",
+        "android_client_info": {
+          "package_name": "com.arunSharma.flashchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993763494695-r6mq2v55hea4kiv8nvh2iircs57bkce8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5z1ZwpQ2r0n5BGAyDC1g4mduwEEqeQ0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993763494695-r6mq2v55hea4kiv8nvh2iircs57bkce8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
