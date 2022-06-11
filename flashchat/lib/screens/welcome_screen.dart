@@ -5,6 +5,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import '../components/rounded_button.dart';
 import '../screens/my_info.dart';
 
+// import 'package:firebase_core/firebase_core.dart';
+
 class WelcomeScreen extends StatefulWidget {
   static String id = 'welcomeScreen';
 

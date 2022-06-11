@@ -1,104 +1,98 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
-Container roundedSquare({
-  double width = double.infinity,
-  double height = 70,
-  required Color bgColor,
-  required Color textColor,
-  required String text1,
-  required String text2,
-  required String text3,
-  required double border_width,
-  required Color border_Color,
-}) {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-    width: double.infinity,
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(text1),
-            Text(" "),
-            Text(text2),
-          ],
-        ),
-        Column(
+void main() => runApp(MyBar());
 
-          children: [
-            Text(text3),
+class MyBar extends StatefulWidget {
+  const MyBar({Key? key}) : super(key: key);
 
-          ],
-        ),
-      ],
-    ),
-    margin: EdgeInsets.symmetric(horizontal: 10.0),
-    decoration: BoxDecoration(
-      color: bgColor,
-      borderRadius: BorderRadius.circular(border_width),
-      border: Border.all(color: border_Color),
-    ),
-  );
+  @override
+  State<MyBar> createState() => _MyBarState();
 }
 
-void main() {
-  runApp(
-    MaterialApp(
+class _MyBarState extends State<MyBar> {
+  var percentage = 50.0;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       home: Scaffold(
-        body: SafeArea(
+        backgroundColor: Colors.lightBlueAccent,
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.center,
-            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(width: double.infinity),
-              SizedBox(
-                height: 20,
-              ),
-              roundedSquare(
-                textColor: Colors.black,
-                bgColor: Colors.teal,
-                text1: ("23/05/22"),
-                text2: ("Fetch milk from the market"),
-                text3: ("Monday"),
-                border_width: 30.0,
-                border_Color: Colors.yellow,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              roundedSquare(
-                text1: ("24/05/22"),
-                text2: ("Pay electricity bills"),
-                text3: ("Tuesday"),
-                bgColor: Colors.teal,
-                textColor: Colors.black,
-                border_width: 30.0,
-                border_Color: Colors.yellow,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              roundedSquare(
-                bgColor: Colors.teal,
-                textColor: Colors.black,
-                text1: ("24/05/22"),
-                text2: ("Complete flutter assignment"),
-                text3: ("Tuesday"),
-                border_width: 30.0,
-                border_Color: Colors.yellow,
-              ),
-              SizedBox(
-                height: 10,
+              Text('${percentage.toString()} %'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: 30,
+                    child: Center(
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            if (percentage > 0) percentage--;
+                          });
+                        },
+                        child: Text(
+                          '-',
+                          style: TextStyle(fontSize: 50, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex:1,
+                          child: Container(
+                            height: 15,
+                            width: percentage,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 15,
+                            width: percentage,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: 30,
+                    child: Center(
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            if (percentage > 0 && percentage < 100)
+                              percentage++;
+                          });
+                        },
+                        child: Text(
+                          '+',
+                          style: TextStyle(fontSize: 40, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
