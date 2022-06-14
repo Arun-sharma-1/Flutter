@@ -1,96 +1,66 @@
+// import 'package:assign/home_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyBar());
-
-class MyBar extends StatefulWidget {
-  const MyBar({Key? key}) : super(key: key);
-
-  @override
-  State<MyBar> createState() => _MyBarState();
+// import 'login_screen.dart';
+//
+void main() {
+  runApp(MyApp());
 }
 
-class _MyBarState extends State<MyBar> {
-  var percentage = 50.0;
+//
+// class MyApp extends StatefulWidget {
+//   @override
+//   State<MyApp> createState() => _MyAppState();
+// }
+//
+// class _MyAppState extends State<MyApp> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       initialRoute: HomeScreen.routeName,
+//       routes: {
+//         LoginScreen.routeName: (context) => LoginScreen(),
+//         HomeScreen.routeName: (context) => HomeScreen(),
+//       },
+//     );
+//   }
+// }
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.lightBlueAccent,
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('${percentage.toString()} %'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                height: 400,
+                width: double.infinity,
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    radius: 30,
-                    child: Center(
-                      child: MaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            if (percentage > 0) percentage--;
-                          });
-                        },
-                        child: Text(
-                          '-',
-                          style: TextStyle(fontSize: 50, color: Colors.white),
-                        ),
-                      ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      width: 100,
+                      color: Colors.red,
                     ),
-                  ),
-                  SizedBox(
-                    width: 15,
                   ),
                   Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex:1,
-                          child: Container(
-                            height: 15,
-                            width: percentage,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: 15,
-                            width: percentage,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    radius: 30,
-                    child: Center(
-                      child: MaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            if (percentage > 0 && percentage < 100)
-                              percentage++;
-                          });
-                        },
-                        child: Text(
-                          '+',
-                          style: TextStyle(fontSize: 40, color: Colors.white),
-                        ),
-                      ),
+                    child: Container(
+                      width: 100,
+                      color: Colors.yellow,
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
