@@ -1,38 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:myshop/screens/categories_screen.dart';
-import './screens/meals_choice.dart';
-import './screens/top_tabScreen.dart';
-import './screens/bottom_tabScreen.dart';
-import './widgets/filters.dart';
+import 'package:myshop/screens/cart_screen.dart';
+import './screens/product_overview.dart';
+import './providers/products.dart';
+import 'package:provider/provider.dart';
+import './screens/product_detail_screen.dart';
+import './providers/cart.dart';
 
 void main() {
-  runApp(MyMeals());
+  runApp(const MyShop());
 }
 
-class MyMeals extends StatelessWidget {
-  const MyMeals({Key? key}) : super(key: key);
+class MyShop extends StatelessWidget {
+  const MyShop({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        canvasColor: Color.fromRGBO(255, 254, 229, 1),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => Products() // creating instance of Products
+            ),
+        ChangeNotifierProvider(
+            create: (_) => Cart() // creating instance of Products
+            ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'MyShop',
+        theme: ThemeData(
+          primarySwatch: Colors.pink,
+          accentColor: Colors.orangeAccent,
+        ),
+        home: ProductOverview(),
+        routes: {
+          // ProductItem.routeName:(context)=>const ProductItem(id: id, title: title, imgUrl: imgUrl)
+          ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+          CartScreen.routeName: (context) => CartScreen(),
+        },
       ),
-      initialRoute: BottomTabs.routeName,
-      routes: {
-        CategoriesScreen.routeName: (context) => const CategoriesScreen(),
-        MyMeal.routeName: (context) => const MyMeals(),
-        // TopTab.routeName: (context) => const TopTab(),
-        BottomTabs.routeName: (context) => BottomTabs(),
-        Filters.routeName:(context)=>Filters(),
-
-      },
-
-      //if route is not registered then i will move to this route
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(builder: (_) => CategoriesScreen());
-      },
     );
   }
 }
