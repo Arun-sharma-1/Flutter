@@ -5,6 +5,7 @@ import '../provider/products.dart';
 import '../widgets/badgeWidget.dart';
 import '../screens/cart_screen.dart';
 import '../provider/cart_data.dart';
+import '../widgets/drawer.dart';
 
 enum PopUpValues {
   showfavorites,
@@ -25,6 +26,7 @@ class _ItemsOverviewState extends State<ItemsOverview> {
     final productsFile = Provider.of<Products>(context);
     final products = _showOnlyFav ? productsFile.favItems : productsFile.items;
     return Scaffold(
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: const Text('Arun\'s Shop'),
         actions: [

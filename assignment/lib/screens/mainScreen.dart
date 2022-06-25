@@ -23,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         floatingActionButton: Builder(
           builder: (context) => FloatingActionButton(
@@ -31,10 +32,10 @@ class _MainScreenState extends State<MainScreen> {
                 showModalBottomSheet(
                     context: context,
                     builder: (context) => AddTask((newTaskTitle) {
-                          setState(() {
+                          return setState(() {
                             tasks.add(Task(title: newTaskTitle, isDone: false));
+                            Navigator.pop(context);
                           });
-                          Navigator.pop(context);
                         }));
               }),
         ),

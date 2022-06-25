@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../provider/cart_data.dart';
 import 'package:provider/provider.dart';
+import '../provider/orders.dart';
 
 class CartScreen extends StatelessWidget {
   static String routeName = 'cartScreen';
@@ -29,12 +30,20 @@ class CartScreen extends StatelessWidget {
                         fontSize: 20),
                   ),
                   const Spacer(),
-                  Chip(label: Text('\$ ${cart.totalBill.toString()} ')),
+                  Chip(label: Text('₹ ${cart.totalBill.toString()} ')),
                   const SizedBox(
                     width: 15,
                   ),
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Order Now'))
+                      onPressed: () {
+                        final order =
+                            Provider.of<Order>(context, listen: false);
+                        order.addOrder(
+                            cart.items.values.toList(), cart.totalBill);
+
+                        cart.clear();
+                      },
+                      child: const Text('Order Now'))
                 ],
               ),
             ),
@@ -63,6 +72,27 @@ class cart_item extends StatelessWidget {
             cart.removeItem(cart.items.keys.toList()[index]);
           },
           direction: DismissDirection.endToStart,
+          confirmDismiss: (direction) {
+            return showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                actions: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text('Yes')),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text('No')),
+                ],
+                title: Text('Are you sure ?'),
+                content: Text('Do you want to delete this item'),
+              ),
+            );
+          },
           key: ValueKey(cart.items.values.toList()[index].id),
           background: Container(
             color: Colors.red,
@@ -78,17 +108,18 @@ class cart_item extends StatelessWidget {
               leading: CircleAvatar(
                 radius: 30,
                 child: Text(
-                  "rs ${cart.items.values.toList()[index].price.toString()}",
+                  "₹ ${cart.items.values.toList()[index].price.toString()}",
                   style: const TextStyle(
                     fontSize: 12,
                   ),
                 ),
               ),
               title: Text(cart.items.values.toList()[index].title),
-              subtitle: Text(cart
-                  .totalAmount(cart.items.values.toList()[index].price,
-                      cart.items.values.toList()[index].quantity)
-                  .toString()),
+              subtitle: Text('₹ ' +
+                  cart
+                      .totalAmount(cart.items.values.toList()[index].price,
+                          cart.items.values.toList()[index].quantity)
+                      .toString()),
               trailing: Text('${cart.items.values.toList()[index].quantity} X'),
             ),
           ),
