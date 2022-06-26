@@ -74,7 +74,9 @@ class _ItemsOverviewState extends State<ItemsOverview> {
             crossAxisSpacing: 15,
             mainAxisSpacing: 15),
         itemBuilder: (context, index) => ChangeNotifierProvider.value(
-            value: products[index], child: ProductStructure()),
+            value: products[index], child: ProductStructure(),
+
+        ),
       )),
     );
   }

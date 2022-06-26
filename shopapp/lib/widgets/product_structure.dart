@@ -40,7 +40,8 @@ class ProductStructure extends StatelessWidget {
             onPressed: () {
               cart.addItems(product.id, product.title, product.price);
               Scaffold.of(context).hideCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(SnackBar(
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(
                 content: Text(
                   'Item added to cart',
                   textAlign: TextAlign.center,

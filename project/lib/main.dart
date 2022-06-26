@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './splash_screen.dart';
 import 'package:provider/provider.dart';
 import './provider/itemList_provider.dart';
+import './screens/product_detail_screen.dart';
+import './screens/edit_screen.dart';
 
 void main() {
   runApp(const Pocketify());
@@ -13,14 +15,17 @@ class Pocketify extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => Items(),
+      create: (_) => Items(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            // primaryColor: Colors.deepPurple,
-            // accentColor: Colors.lightGreenAccent,
-            // canvasColor: Colors.amber
-            ),
-        home: SplashScreens(),
+            primarySwatch: Colors.deepPurple,
+            accentColor: Colors.lightGreenAccent,
+            canvasColor: Colors.white.withOpacity(0.9)),
+        home: const SplashScreens(),
+        routes: {
+          EditScreen.routeName: (context) => const EditScreen(),
+        },
       ),
     );
   }
