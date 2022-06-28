@@ -20,6 +20,23 @@ class ItemsOverview extends StatefulWidget {
 
 class _ItemsOverviewState extends State<ItemsOverview> {
   bool _showOnlyFav = false;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // Provider.of<Products>(context).fetchAndSetProducts(); .of(context) thing won't work in init state
+    Future.delayed(Duration.zero).then((_) async {
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,20 +81,29 @@ class _ItemsOverviewState extends State<ItemsOverview> {
           )
         ],
       ),
-      body: SafeArea(
-          child: GridView.builder(
-        padding: const EdgeInsets.all(10),
-        itemCount: products.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 15),
-        itemBuilder: (context, index) => ChangeNotifierProvider.value(
-            value: products[index], child: ProductStructure(),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                strokeWidth:2,
+                backgroundColor: Colors.grey,
+                color: Colors.deepPurple,
 
-        ),
-      )),
+              ),
+            )
+          : SafeArea(
+              child: GridView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: products.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15),
+              itemBuilder: (context, index) => ChangeNotifierProvider.value(
+                value: products[index],
+                child: ProductStructure(),
+              ),
+            )),
     );
   }
 }

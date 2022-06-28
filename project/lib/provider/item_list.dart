@@ -8,10 +8,12 @@ class ItemList {
   final String category;
   final String remark;
   final DateTime date;
+  final TimeOfDay time;
 
   ItemList(
       {required this.img,
       required this.date,
+      required this.time,
       this.category = 'Expences',
       required this.remark,
       required this.title,

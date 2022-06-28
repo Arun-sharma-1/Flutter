@@ -3,6 +3,7 @@ import 'package:project/constant/kstyle.dart';
 import 'package:provider/provider.dart';
 import '../provider/itemList_provider.dart';
 import 'package:intl/intl.dart';
+import '../screens/icon_edit_screen.dart';
 
 class EditScreen extends StatefulWidget {
   static String routeName = 'editscreen';
@@ -14,6 +15,7 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   var date = null;
+  TimeOfDay? time;
 
   Future pickDate(BuildContext context) async {
     final newDate = await showDatePicker(
@@ -26,6 +28,17 @@ class _EditScreenState extends State<EditScreen> {
     if (newDate == null) return;
     setState(() {
       date = newDate;
+    });
+  }
+
+  Future pickTime(BuildContext context) async {
+    const initialTime = TimeOfDay(hour: 9, minute: 10);
+    final newTime =
+        await showTimePicker(context: context, initialTime: initialTime);
+
+    if (newTime == null) return;
+    setState(() {
+      time = newTime.replacing(hour: newTime.hourOfPeriod);
     });
   }
 
@@ -67,7 +80,14 @@ class _EditScreenState extends State<EditScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        //Todo: Add Bottom Navigation  to change image
+                        //Todo: Add  Navigation  to change image
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return IconEditScreen(
+                                productId: productId!,
+                              );
+                            });
                       },
                       child: Container(
                         margin: const EdgeInsets.all(8),
@@ -103,11 +123,9 @@ class _EditScreenState extends State<EditScreen> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      pickDate(context);
-                      print('hello');
+                      await pickDate(context);
                       Provider.of<Items>(context, listen: false)
                           .updateDate(productId!, date);
-                      print('by');
                     },
                     child: CustomIcon(
                         Icons.calendar_month, ' Date ', productDate.toString(),
@@ -116,9 +134,20 @@ class _EditScreenState extends State<EditScreen> {
                   const Divider(
                     color: Colors.black,
                   ),
-                  CustomIcon(Icons.access_time, 'Time ',
-                      DateFormat('jm').format(product.date),
-                      trailIcon: Icons.keyboard_arrow_right),
+                  GestureDetector(
+                    onTap: () async {
+                      await pickTime(context);
+                      Provider.of<Items>(context, listen: false)
+                          .updateTime(productId!, time);
+                    },
+                    child: CustomIcon(
+                        Icons.access_time,
+                        'Time ',
+                        product.time.toString().substring(10, 15) +
+                            ' ' +
+                            product.time.period.toString().substring(10),
+                        trailIcon: Icons.keyboard_arrow_right),
+                  ),
                   const Divider(
                     color: Colors.black,
                   ),

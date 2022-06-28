@@ -39,6 +39,7 @@ class ProductDetailScreen extends StatelessWidget {
               onDismissed: (directon) {
                 Provider.of<Items>(context, listen: false)
                     .deleteProduct(productId);
+
                 Navigator.of(context).pop();
               },
               confirmDismiss: (direction) {

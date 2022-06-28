@@ -187,7 +187,8 @@ class HomePage extends StatelessWidget {
                                   ));
                         },
                         child: ProductItem(
-                            date: DateFormat.yMMMd().format(date),
+                            date: DateFormat.yMMMd()
+                                .format(listItems[index].date),
                             remark: listItems[index].remark,
                             id: listItems[index].id,
                             img: listItems[index].img,
