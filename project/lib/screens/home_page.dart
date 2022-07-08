@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:project/provider/itemList_provider.dart';
+import 'package:project/provider/item_list.dart';
 import 'package:project/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 import '../constant/kstyle.dart';
 import 'package:intl/intl.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import '../widgets/add_item.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _showData = false;
   @override
   Widget build(BuildContext context) {
+    final isportrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     final listData = Provider.of<Items>(context);
     final listItems = listData.items;
     DateTime date = DateTime.now();
@@ -17,192 +27,327 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.deepPurple,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SafeArea(
-              child: SingleChildScrollView(
+          if (!isportrait)
+            SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Details'),
+                  Switch(
+                      activeColor: Colors.white,
+                      focusColor: Colors.red,
+                      value: _showData,
+                      onChanged: (value) {
+                        setState(() {
+                          _showData = value;
+                        });
+                      }),
+                ],
+              ),
+            ),
+          if (isportrait) CustomContainer(context, date, listData, 0.3),
+          if (isportrait)
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 1,
+                height: (MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        MediaQuery.of(context).padding.bottom) *
+                    0.7,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today, color: Colors.white70),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        Text(
-                          '${date.year}-${date.month.toString().padLeft(2, '0')} Balance',
-                          style: kstyle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      ' - ${listData.totalExpances.toString()}',
-                      style: const TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Budget Setting',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              //Todo:progess bar indicator
+                              Container(
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                      Colors.lightBlue.shade100,
+                                      Colors.lightGreen.shade100
+                                    ])),
+                                child: StepProgressIndicator(
+                                  totalSteps: 100,
+                                  currentStep: 50,
+                                  size: 10,
+                                  padding: 0,
+                                  unselectedColor: Colors.blue.shade100,
+                                  roundedEdges: const Radius.circular(10),
+                                  selectedGradientColor: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color.fromRGBO(238, 238, 238, 1.0),
+                                      Color.fromRGBO(96, 9, 100, 1)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ]),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          if (index == 0 && listItems.isNotEmpty) {
+                            return Container(
+                              padding: const EdgeInsets.all(10),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 219, 224, 224),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(DateFormat.yMMMd().format(date)),
+                                  Text(
+                                      'Total Expances - ${listData.totalExpances}')
+                                ],
+                              ),
+                            );
+                          }
+
+                          index -= 1;
+                          if (index == -1) return Container();
+
+                          return Dismissible(
+                            key: ValueKey(listItems[index].id),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                            ),
+                            onDismissed: (direction) {
+                              listData.deleteProduct(listItems[index].id);
+                            },
+                            confirmDismiss: (direction) {
+                              return showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                        title: const Text('Are you Sure? '),
+                                        content: const Text(
+                                            'Do you want to delete this product'),
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                              },
+                                              child: const Text('yes')),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                              child: const Text('No')),
+                                        ],
+                                      ));
+                            },
+                            child: ProductItem(
+                                date: DateFormat.yMMMd()
+                                    .format(listItems[index].date),
+                                remark: listItems[index].remark,
+                                id: listItems[index].id,
+                                img: listItems[index].img,
+                                title: listItems[index].title,
+                                price: listItems[index].price),
+                          );
+                        },
+                        itemCount: listItems == null ? 1 : listItems.length + 1,
+                      ),
                     ),
-                    Text(
-                      'Expences: -${listData.totalExpances.toString()}',
-                      style: kstyle,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Text(
-                      'income 0',
-                      style: kstyle,
-                    ),
+                    // Image.asset("food.png")
                   ],
                 ),
               ),
             ),
-          ),
-          Expanded(
-              child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    child: Column(
+          if (!isportrait)
+            _showData
+                ? Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 1,
+                      height: (MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).padding.top -
+                              MediaQuery.of(context).padding.bottom) *
+                          0.7,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Budget Setting',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          //Todo:progess bar indicator
-                          Container(
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                  Colors.lightBlue.shade100,
-                                  Colors.lightGreen.shade100
-                                ])),
-                            child: StepProgressIndicator(
-                              totalSteps: 100,
-                              currentStep: 50,
-                              size: 10,
-                              padding: 0,
-                              unselectedColor: Colors.blue.shade100,
-                              roundedEdges: const Radius.circular(10),
-                              selectedGradientColor: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color.fromRGBO(238, 238, 238, 1.0),
-                                  Color.fromRGBO(96, 9, 100, 1)
-                                ],
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Budget Setting',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    //Todo:progess bar indicator
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                            Colors.lightBlue.shade100,
+                                            Colors.lightGreen.shade100
+                                          ])),
+                                      child: StepProgressIndicator(
+                                        totalSteps: 100,
+                                        currentStep: 50,
+                                        size: 10,
+                                        padding: 0,
+                                        unselectedColor: Colors.blue.shade100,
+                                        roundedEdges: const Radius.circular(10),
+                                        selectedGradientColor:
+                                            const LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Color.fromRGBO(238, 238, 238, 1.0),
+                                            Color.fromRGBO(96, 9, 100, 1)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
                             ),
                           ),
-                        ]),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      if (index == 0 && listItems.isNotEmpty) {
-                        return Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 219, 224, 224),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(DateFormat.yMMMd().format(date)),
-                              Text('Total Expances - ${listData.totalExpances}')
-                            ],
-                          ),
-                        );
-                      }
+                          Expanded(
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                if (index == 0 && listItems.isNotEmpty) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(10),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(255, 219, 224, 224),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10)),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(DateFormat.yMMMd().format(date)),
+                                        Text(
+                                            'Total Expances - ${listData.totalExpances}')
+                                      ],
+                                    ),
+                                  );
+                                }
 
-                      index -= 1;
-                      if (index == -1) return Container();
+                                index -= 1;
+                                if (index == -1) return Container();
 
-                      return Dismissible(
-                        key: ValueKey(listItems[index].id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                            size: 28,
+                                return Dismissible(
+                                  key: ValueKey(listItems[index].id),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                      size: 28,
+                                    ),
+                                    color: Colors.red,
+                                    alignment: Alignment.centerRight,
+                                  ),
+                                  onDismissed: (direction) {
+                                    listData.deleteProduct(listItems[index].id);
+                                  },
+                                  confirmDismiss: (direction) {
+                                    return showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title:
+                                                  const Text('Are you Sure? '),
+                                              content: const Text(
+                                                  'Do you want to delete this product'),
+                                              actions: [
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                    },
+                                                    child: const Text('yes')),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(false);
+                                                    },
+                                                    child: const Text('No')),
+                                              ],
+                                            ));
+                                  },
+                                  child: ProductItem(
+                                      date: DateFormat.yMMMd()
+                                          .format(listItems[index].date),
+                                      remark: listItems[index].remark,
+                                      id: listItems[index].id,
+                                      img: listItems[index].img,
+                                      title: listItems[index].title,
+                                      price: listItems[index].price),
+                                );
+                              },
+                              itemCount:
+                                  listItems == null ? 1 : listItems.length + 1,
+                            ),
                           ),
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                        ),
-                        onDismissed: (direction) {
-                          listData.deleteProduct(listItems[index].id);
-                        },
-                        confirmDismiss: (direction) {
-                          return showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                    title: const Text('Are you Sure? '),
-                                    content: const Text(
-                                        'Do you want to delete this product'),
-                                    actions: [
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true);
-                                          },
-                                          child: const Text('yes')),
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(false);
-                                          },
-                                          child: const Text('No')),
-                                    ],
-                                  ));
-                        },
-                        child: ProductItem(
-                            date: DateFormat.yMMMd()
-                                .format(listItems[index].date),
-                            remark: listItems[index].remark,
-                            id: listItems[index].id,
-                            img: listItems[index].img,
-                            title: listItems[index].title,
-                            price: listItems[index].price),
-                      );
-                    },
-                    itemCount: listItems == null ? 1 : listItems.length + 1,
-                  ),
-                ),
-                // Image.asset("food.png")
-              ],
-            ),
-          ))
+                          // Image.asset("food.png")
+                        ],
+                      ),
+                    ),
+                  )
+                : CustomContainer(context, date, listData, 0.7),
         ],
       ),
       bottomNavigationBar: GNav(
@@ -211,7 +356,7 @@ class HomePage extends StatelessWidget {
           gap: 8,
           padding: const EdgeInsets.all(16),
           onTabChange: (index) {
-            print(index);
+            // print(index);
           },
           backgroundColor: Colors.white,
           tabs: const [
@@ -232,11 +377,76 @@ class HomePage extends StatelessWidget {
               text: 'settting',
             )
           ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (_) {
+                return AddItems();
+              });
+        },
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Container CustomContainer(
+      BuildContext context, DateTime date, Items listData, double height) {
+    return Container(
+      height: (MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom) *
+          height,
+      padding: const EdgeInsets.all(10.0),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today, color: Colors.white70),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  Text(
+                    '${date.year}-${date.month.toString().padLeft(2, '0')} Balance',
+                    style: kstyle,
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              Text(
+                ' - ${listData.totalExpances.toString()}',
+                style: const TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                'Expences: -${listData.totalExpances.toString()}',
+                style: kstyle,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text(
+                'income 0',
+                style: kstyle,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
-
-/* 
+/*
  LinearPercentIndicator(
                                 padding: const EdgeInsets.all(0),
                                 animation: true,

@@ -70,19 +70,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _form.currentState?.save();
     try {
       if (_editedProduct.id != '') {
-       await Provider.of<Products>(context, listen: false).updateProduct(
-            _editedProduct.id, _editedProduct);
-      }
-      else {
-       await Provider.of<Products>(context, listen: false)
+        await Provider.of<Products>(context, listen: false)
+            .updateProduct(_editedProduct.id, _editedProduct);
+      } else {
+        await Provider.of<Products>(context, listen: false)
             .addProduct(_editedProduct);
       }
-    }
-    catch (e) {
+    } catch (e) {
       showDialog(
           context: context,
-          builder: (_) =>
-              AlertDialog(
+          builder: (_) => AlertDialog(
                 title: Text('An error occured'),
                 content: Text('Something went wrong!'),
                 actions: [
@@ -93,8 +90,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       child: Text('Okay'))
                 ],
               ));
-    }
-    finally {
+    } finally {
       setState(() {
         _isLoading = false;
       });

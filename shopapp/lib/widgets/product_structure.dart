@@ -3,12 +3,15 @@ import 'package:provider/provider.dart';
 import '../provider/product.dart';
 import '../screens/product_detail_screen.dart';
 import '../provider/cart_data.dart';
+import '../provider/auth.dart';
 
 class ProductStructure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context);
+    final authData = Provider.of<Auth>(context, listen: false);
+    final String token = authData.token;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: GridTile(
@@ -30,7 +33,7 @@ class ProductStructure extends StatelessWidget {
                         ? Icons.favorite_outlined
                         : Icons.favorite_border),
                     onPressed: () {
-                      product.toogleisFavorite();
+                      product.toogleisFavorite(authData.token);
                     },
                     color: Colors.orange,
                   ))),
@@ -40,8 +43,7 @@ class ProductStructure extends StatelessWidget {
             onPressed: () {
               cart.addItems(product.id, product.title, product.price);
               Scaffold.of(context).hideCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(
-                  SnackBar(
+              Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text(
                   'Item added to cart',
                   textAlign: TextAlign.center,

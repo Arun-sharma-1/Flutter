@@ -15,10 +15,10 @@ class SplashScreens extends StatelessWidget {
         splash: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(
-              "assets/manwithlaptop.json",
-              repeat: false,
-            ),
+            // Lottie.asset(
+            //   "assets/manwithlaptop.json",
+            //   repeat: false,
+            // ),
             const Text(
               "Welcome to the app",
               style: TextStyle(
@@ -32,8 +32,8 @@ class SplashScreens extends StatelessWidget {
         nextScreen: HomePage(),
         backgroundColor: Colors.greenAccent,
         splashIconSize: double.infinity,
-        duration: 3000,
-        splashTransition: SplashTransition.slideTransition,
+        duration: 1500,
+        splashTransition: SplashTransition.fadeTransition,
         pageTransitionType: PageTransitionType.leftToRightWithFade,
         animationDuration: const Duration(seconds: 3),
       ),

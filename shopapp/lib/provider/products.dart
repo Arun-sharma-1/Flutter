@@ -39,6 +39,8 @@ class Products with ChangeNotifier {
     //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     // ),
   ];
+  final authToken;
+  Products(this.authToken, this._items);
 
   List<Product> get items {
     return [..._items]; // returning copy of each items
@@ -50,7 +52,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     final url = Uri.parse(
-        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products.json');
+        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products.json?auth=$authToken');
     try {
       final responce = await http.get(url);
       final extractedData = json.decode(responce.body) as Map<String, dynamic>;
@@ -73,7 +75,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
-        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products.json');
+        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products.json?auth=$authToken');
     try {
       final responce = await http.post(url,
           body: json.encode({
@@ -103,7 +105,7 @@ class Products with ChangeNotifier {
 
   Future<void> updateProduct(String id, Product product) async {
     final url = Uri.parse(
-        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products/$id.json');
+        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
     try {
       await http.patch(url,
           body: json.encode({
@@ -117,6 +119,8 @@ class Products with ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
+      // if you want to retrieve the old data then hold http.path in variable and then responce.status code inside try and then retrieve it
+      //inside catch retriving is not possible for path , put ,delete
       print(e);
     }
   }
@@ -124,7 +128,7 @@ class Products with ChangeNotifier {
   Future<void> deleteProduct(String id) async {
     //optimistic approach -> we roll back if the item is not deleted
     final url = Uri.parse(
-        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products/$id.json');
+        'https://arunsshop-972c0-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
     final existingProdIndex = _items.indexWhere((element) => element.id == id);
     var existingProduct = _items[existingProdIndex];
     _items.removeWhere((element) => element.id == id);
@@ -146,9 +150,7 @@ class Products with ChangeNotifier {
 
     final url = Uri.parse(
         'https://arunsshop-972c0-default-rtdb.firebaseio.com/products/$productId.json');
-    http.patch(url, body: json.encode( {
-          'isFavorite':product.isFavorite
-    }));
+    http.patch(url, body: json.encode({'isFavorite': product.isFavorite}));
     notifyListeners();
   }
 }

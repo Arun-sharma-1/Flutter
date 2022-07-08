@@ -1,10 +1,9 @@
-import 'package:assign/home_screen.dart';
+import 'package:assign/screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import './login_screen.dart';
-import 'blood_bank_list.dart';
-
-// import 'login_screen.dart';
-//
+import 'screen/login_screen.dart';
+import 'screen/donate_blood_screen.dart';
+import './screen/find_blood.dart';
+import './screen/booking_screen.dart';
 void main() {
   runApp(MyApp());
 }
@@ -23,7 +22,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
         HomeScreen.routeName: (context) => HomeScreen(),
-        BloodBankList.routeName:(context) =>BloodBankList(),
+        DonateBloodScreen.routeName:(context) =>DonateBloodScreen(),
+        FindBloodScreen.routeName:(context)=>FindBloodScreen(),
+        BookingScreen.routeName:(context)=>BookingScreen()
       },
     );
   }

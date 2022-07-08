@@ -42,9 +42,16 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  double totalAmount(double price, int quantity) {
+  // double totalAmount(double price, int quantity) {
+  //   var total = 0.0;
+  //   total = price * quantity;
+  //   return total;
+  // }
+  double get totalAmount {
     var total = 0.0;
-    total = price * quantity;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
+    });
     return total;
   }
 

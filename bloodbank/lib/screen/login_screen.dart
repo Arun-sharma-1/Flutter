@@ -1,5 +1,6 @@
+import 'package:assign/screen/find_blood.dart';
 import 'package:flutter/material.dart';
-import 'blood_bank_list.dart';
+import 'donate_blood_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   static String routeName = 'loginscreen';
@@ -15,7 +16,7 @@ class LoginScreen extends StatelessWidget {
             strokeWidth: 1,
           ));
         });
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
   }
 
@@ -40,7 +41,7 @@ class LoginScreen extends StatelessWidget {
               Text(
                 'Logged  in as $email ',
                 style: TextStyle(
-                    fontSize: 25, color: Colors.white, letterSpacing: 1),
+                    fontSize: 22, color: Colors.white, letterSpacing: 1),
               ),
               SizedBox(
                 height: 80,
@@ -57,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     onPressed: () {
                       //Todo: Move to next screen with dealy of 3 sec
-                      Navigator.of(context).pushNamed(BloodBankList.routeName);
+                      Navigator.of(context).pushNamed(DonateBloodScreen.routeName);
                       DonateIndicator(context);
                     },
                     child: Text('Donate Blood')),
@@ -71,7 +72,9 @@ class LoginScreen extends StatelessWidget {
                         ),
                         primary: Colors.white,
                         onPrimary: Colors.red),
-                    onPressed: () {},
+                    onPressed: () {
+                          Navigator.of(context).pushNamed(FindBloodScreen.routeName);
+                    },
                     child: Text('Get Blood')),
               ),
             ],

@@ -21,6 +21,17 @@ class _MyAppState extends State<MyApp> {
   ];
   int questionIndex = 0;
   int currentScore = 0;
+
+  void registerAttempt(String optionId) {
+    if (currentScore < question.length) {
+      if (question[questionIndex].isCorrect(optionId)) {
+        currentScore++;
+      }
+      questionIndex++;
+    }
+
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -52,10 +63,7 @@ class _MyAppState extends State<MyApp> {
                                   question[questionIndex].answers[0].toString(),
                               onPressed: () {
                                 setState(() {
-                                  if (question[questionIndex].Rightans == 'A') {
-                                    currentScore++;
-                                  }
-                                  questionIndex++;
+                                  registerAttempt('A');
                                 });
                               },
                             ),
@@ -68,10 +76,7 @@ class _MyAppState extends State<MyApp> {
                                   question[questionIndex].answers[1].toString(),
                               onPressed: () {
                                 setState(() {
-                                  if (question[questionIndex].Rightans == 'B') {
-                                    currentScore++;
-                                  }
-                                  questionIndex++;
+                                  registerAttempt('B');
                                 });
                               },
                             ),
@@ -85,10 +90,7 @@ class _MyAppState extends State<MyApp> {
                                   question[questionIndex].answers[2].toString(),
                               onPressed: () {
                                 setState(() {
-                                  if (question[questionIndex].Rightans == 'C') {
-                                    currentScore++;
-                                  }
-                                  questionIndex++;
+                                  registerAttempt('C');
                                 });
                               },
                             ),
@@ -101,10 +103,7 @@ class _MyAppState extends State<MyApp> {
                                   question[questionIndex].answers[3].toString(),
                               onPressed: () {
                                 setState(() {
-                                  if (question[questionIndex].Rightans == 'D') {
-                                    currentScore++;
-                                  }
-                                  questionIndex++;
+                                  registerAttempt('D');
                                 });
                               },
                             ),

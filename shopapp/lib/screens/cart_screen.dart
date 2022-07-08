@@ -34,16 +34,7 @@ class CartScreen extends StatelessWidget {
                   const SizedBox(
                     width: 15,
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        final order =
-                            Provider.of<Order>(context, listen: false);
-                        order.addOrder(
-                            cart.items.values.toList(), cart.totalBill);
-
-                        cart.clear();
-                      },
-                      child: const Text('Order Now'))
+                  OrderButton(cart: cart)
                 ],
               ),
             ),
@@ -52,6 +43,40 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed:( widget.cart.totalAmount <= 0 || _isLoading )
+            ? null
+            : () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                 await Provider.of<Order>(context, listen: false).addOrder(
+                    widget.cart.items.values.toList(), widget.cart.totalBill);
+                setState(() {
+                  _isLoading = false;
+                });
+                widget.cart.clear();
+              },
+        child:_isLoading?CircularProgressIndicator(): const Text('Order Now'));
   }
 }
 
@@ -115,11 +140,7 @@ class cart_item extends StatelessWidget {
                 ),
               ),
               title: Text(cart.items.values.toList()[index].title),
-              subtitle: Text('₹ ' +
-                  cart
-                      .totalAmount(cart.items.values.toList()[index].price,
-                          cart.items.values.toList()[index].quantity)
-                      .toString()),
+              subtitle: Text('₹ ' + cart.totalAmount.toString()),
               trailing: Text('${cart.items.values.toList()[index].quantity} X'),
             ),
           ),
