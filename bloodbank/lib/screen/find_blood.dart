@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'donate_blood_screen.dart';
+import '../default-style.dart';
 class FindBloodScreen extends StatelessWidget {
   static String routeName='find-blood-screen';
   const FindBloodScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class SubTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       subtitle,
-      style: TextStyle(color: Colors.white, letterSpacing: 1),
+      style: kstyle.copyWith(color: Colors.white , letterSpacing: 1),
     );
   }
 }

@@ -1,17 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String routeName = 'homescreen';
-  const HomeScreen({Key? key}) : super(key: key);
+  static String routeName = 'home-screen';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var fieldEmail;
-  var fieldPass;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                     TextField(
-                      onChanged: (newValue) {
-                        fieldEmail = newValue;
-                        // print(fieldEmail);
-                      },
+                      controller: _emailController,
                       decoration: InputDecoration(
                           hintText: 'Enter your Email',
                           fillColor: Colors.white),
@@ -60,9 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     TextField(
                       obscureText: true,
-                      onChanged: (newText) {
-                        fieldPass = newText;
-                      },
+                      controller: _passController,
                       style: TextStyle(color: Colors.white),
                       decoration:
                           InputDecoration(hintText: 'Enter your Password'),
@@ -75,14 +71,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return LoginScreen(email: fieldEmail,);
-                      }));
+                    onPressed: () async {
+                      await _auth.createUserWithEmailAndPassword(
+                          email: 'arunsharma@1223', password: '1234');
+                      // Navigator.of(context)
+                      //     .pushReplacement( MaterialPageRoute(builder: (context) {
+                      //   return LoginScreen(email: fieldEmail,);
+                      // }));
                     },
                     child: Text('Login'),
-                    style: ElevatedButton.styleFrom(primary: Colors.red , ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                    ),
                   ),
                 ),
               ],

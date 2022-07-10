@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "205572656531",
+    "project_id": "pocketify-64a6e",
+    "storage_bucket": "pocketify-64a6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205572656531:android:c9c89979765732bddeec66",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205572656531-rf8gi0r0j48rgub4jt3tphpeb38konpc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW9o1-xYoOWdr72i4SHs9TmLLSLxzve-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205572656531-rf8gi0r0j48rgub4jt3tphpeb38konpc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
